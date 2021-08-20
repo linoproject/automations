@@ -1,1 +1,5 @@
-# automations
+# Linoproject Automations
+
+## Bootstrap
+
+## Example pipelines
