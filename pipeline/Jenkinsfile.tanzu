@@ -1,0 +1,69 @@
+podTemplate(containers: [
+    //containerTemplate(name: 'kubectl', image: 'roffe/kubectl:v1.13.2', command: 'sleep', args: '99d'),
+    containerTemplate(name: 'tanzu', image: 'registry.rainpole.io/infrastructure/tanzu:1.6', command: 'sleep', args: '99d'),
+  ]) {
+
+    node(POD_LABEL) {
+        
+        stage ('Env & Pull'){
+            sh "env"
+            sh "echo sync with git repo" 
+            sh "git config --global http.sslVerify false"
+            
+            
+            git branch: 'main',
+                credentialsId: 'gitlab_linoproject',
+                url: "https://gitlab.linoproject.lab/root/infrastructureautomation.git"
+
+            sh "ls -lah"
+            
+            sh "echo Create kubeconfig file"
+            sh "mkdir .kube"
+            sh "cp env/kubeconfig-tkg .kube/config"
+        }
+
+        def repositories = [:]
+
+        def subfolders = sh(
+            returnStdout: true,
+            script: 'ls -d cluster/*'
+        ).trim().split(System.getProperty("line.separator"))
+
+        subfolders.each{ folder ->
+            String cluster_name = folder.split('/').last().replaceAll(/[^A-Za-z0-9_-]/, '_')
+            repositories.put(folder, cluster_name)
+        }
+
+        stage ('Apply cluster config'){
+            repositories.each { folder, cluster_name ->
+
+                script{ operations = readYaml (file: "./${folder}/operations.yaml") }
+
+                // Check if is tkg or vsphere tanzu clusyer
+                if (operations.vsphere7tanzu == true){
+                    withCredentials([usernamePassword(credentialsId: 'vsphere_login', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                        container('tanzu') {
+                            stage('Show files') {
+                                sh 'cd / && ls -lha' 
+                                sh """
+                                export VSPHERE_WITH_TANZU_CONTROL_PLANE_IP=${operations.controlpane_ip}
+                                export VSPHERE_WITH_TANZU_USERNAME=${user}
+                                export VSPHERE_WITH_TANZU_PASSWORD=${pass}
+                                export VSPHERE_WITH_TANZU_NAMESPACE=${operations.controlpane_namespace}
+                                '/autologin.sh'
+                                """
+                                
+                                sh "kubectl apply -f ${folder}/cluster.yaml"
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+
+    
+        
+    }
+}

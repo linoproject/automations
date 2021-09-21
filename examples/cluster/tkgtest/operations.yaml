@@ -1,0 +1,3 @@
+vsphere7tanzu: false
+delete: true 
+workers: 2 #Set to 0 for non scale process (1 is the min worker-node size)

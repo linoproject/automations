@@ -1,0 +1,17 @@
+apiVersion: run.tanzu.vmware.com/v1alpha1
+kind: TanzuKubernetesCluster
+metadata:
+    name: tanzutest
+    namespace: mgmt
+spec:
+    distribution:
+        version: v1.18
+    topology:
+        controlPlane:
+            count: 1
+            class: best-effort-small
+            storageClass: management-storage-policy-single-node
+        workers:
+            count: 1
+            class: best-effort-small
+            storageClass: management-storage-policy-single-node

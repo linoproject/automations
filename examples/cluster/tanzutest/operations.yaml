@@ -1,0 +1,5 @@
+vsphere7tanzu: true
+delete: false #true will skip further processes
+controlpane_ip: 192.168.203.129
+controlpane_namespace: mgmt
+#workers: 1 Configuration is applied from clusyer.yaml

@@ -1,0 +1,84 @@
+String DEMO_MACHINE_IPFQDN = "192.168.205.2"
+
+node("tanzu") {
+        
+    stage ('Env & Pull'){
+        sh "env"
+        sh "echo sync with git repo"
+        sh "git config --global http.sslVerify false"
+        
+        
+        git branch: 'main',
+            credentialsId: 'gitlab_linoproject',
+            url: "https://gitlab.linoproject.lab/root/infrastructureautomation.git"
+
+        
+
+    }
+    
+    
+    def repositories = [:]
+
+    def subfolders = sh(
+        returnStdout: true,
+        script: 'ls -d cluster/*'
+    ).trim().split(System.getProperty("line.separator"))
+
+    subfolders.each{ folder ->
+        String cluster_name = folder.split('/').last().replaceAll(/[^A-Za-z0-9_-]/, '_')
+        repositories.put(folder, cluster_name)
+    }
+    stage('Execute Tanzu remote command') {
+
+        repositories.each { folder, cluster_name ->
+
+            script{ operations = readYaml (file: "./${folder}/operations.yaml") }
+
+            // Check if is tkg or vsphere tanzu clusyer
+            if (operations.vsphere7tanzu == false){
+
+                // Check if cluster is already present
+                
+                def not_cluster = sh (
+                    script :"""
+                        tanzu cluster get ${cluster_name}
+                    """, returnStatus: true
+                )
+                
+
+                if ( not_cluster ){
+                    print "Start creating cluster..."
+                    sh "tanzu cluster create -f ${folder}/cluster.yaml"
+                }else{
+                    print "Cluster ${cluster_name} is already created"
+                    // Check operations
+                    // Delete Cluster
+                    sh "ls -la ${folder}"
+                    
+                    
+                    print "Operation Delete: "+ operations.delete
+                    if ( operations.delete == true ){
+                        // Delete cluster
+                        print "Delete Cluster ${cluster_name}"
+                        sh "tanzu cluster delete ${cluster_name} -y"
+                    }else{
+                        // Check Scaling
+                        if ( operations.workers > 0 ){
+                            print "Try to scale worker nodes"
+                            sh "tanzu cluster scale ${cluster_name} -w ${operations.workers}"
+                        }
+                        print "Execute scaling check"
+                    }
+                    
+                }
+            }
+        }
+
+        
+        
+
+    }
+
+    
+}
+

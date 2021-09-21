@@ -1,0 +1,47 @@
+String CONTAINER_REGISTRY = "registry.rainpole.io/infrastructure"
+
+node("tanzu") {
+    
+    stage ('Env & Pull'){
+        sh "env"
+        sh "echo sync with git repo"
+        sh "git config --global http.sslVerify false"
+        
+        
+        git branch: 'main',
+            credentialsId: 'gitlab_linoproject',
+            url: "https://gitlab.linoproject.lab/root/infrastructureautomation.git"
+
+        sh "ls -lah"
+        
+    }
+    
+
+    stage('Compile') {
+        def repositories = [:]
+
+        def subfolders = sh(
+            returnStdout: true,
+            script: 'ls -d images/*'
+        ).trim().split(System.getProperty("line.separator"))
+
+        subfolders.each{ folder ->
+            String image_name = folder.split('/').last().replaceAll(/[^A-Za-z0-9_-]/, '_')
+            repositories.put(folder, image_name)
+        }
+        repositories.each { folder, image_name ->
+
+            script{ definitions = readYaml (file: "./${folder}/definitions.yaml") }
+
+            sh "ls -lha ${folder}"
+            sh "cd ${folder} && docker build --force-rm --rm --no-cache -t ${image_name}:${definitions.version} ."
+            sh "docker tag ${image_name}:${definitions.version} ${CONTAINER_REGISTRY}/${image_name}:${definitions.version}"
+            sh "docker push ${CONTAINER_REGISTRY}/${image_name}:${definitions.version}"
+            sh "docker rmi ${image_name}:${definitions.version}"
+            sh "docker rmi ${CONTAINER_REGISTRY}/${image_name}:${definitions.version}"
+        }
+    }
+
+            
+}
+
