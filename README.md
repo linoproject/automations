@@ -1,7 +1,7 @@
 # Linoproject Automations Table of Content
 
 ## Bootstrap
-- Deploy bootstrap VM (with Vault and certificate)
+- [Deploy bootstrap VM (with Vault and certificate)](bootstrap/README.md)
 - Deploy mgmt cluster via VMDemo:
   - Deploy Gitlab (with custom cert)
   - Deploy Harbor (with custom cert)
@@ -16,8 +16,6 @@
 ## Example pipelines
 - Image Build Pipeline (basic usage for vSphere Tanzu)
   - via DEMO VM
-  - via Kaniko (WIP)
+  - via Kaniko (TODO)
 - Create Tanzu Kubernetes Grid Cluster from vSphere w Tanzu namespace
 - Create Tanzu Kubernetes Grid Cluster from Management Cluster
-
-## Links
