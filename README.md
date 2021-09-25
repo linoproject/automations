@@ -1,7 +1,7 @@
 # Linoproject Automations Table of Content
 
 ## Bootstrap
-- [Deploy bootstrap VM (with Vault and certificate)](bootstrap/README.md)
+- [Deploy bootstrap VM (with Vault and certificate)](bootstrap)
 - Deploy mgmt cluster via VMDemo:
   - Deploy Gitlab (with custom cert)
   - Deploy Harbor (with custom cert)
