@@ -1,9 +1,8 @@
-# Linoproject Automations
+# Linoproject Automations Table of Content
 
 ## Bootstrap
-- Deploy demo VM 
+- Deploy bootstrap VM (with Vault and certificate)
 - Deploy mgmt cluster via VMDemo:
-  - Create CA Keycert and certificates
   - Deploy Gitlab (with custom cert)
   - Deploy Harbor (with custom cert)
   - Deploy Jenkins
@@ -22,6 +21,3 @@
 - Create Tanzu Kubernetes Grid Cluster from Management Cluster
 
 ## Links
-
-## Tools
-- SSL Cert script (link)
