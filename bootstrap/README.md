@@ -41,6 +41,9 @@ Check the offical guides:
 - [https://www.vaultproject.io/docs/secrets/pki](https://www.vaultproject.io/docs/secrets/pki)
 - [https://learn.hashicorp.com/tutorials/vault/pki-engine#step-1-generate-root-ca](https://learn.hashicorp.com/tutorials/vault/pki-engine#step-1-generate-root-ca) -> This is the best guide to start dealing with TLS SSL certificates
 
+### Fianl Notes
+During the unsealing procedure it's very important keep the vault-keys (root token and unseal keys row and base64 encoded). If you plan a vault restart you need to manually provide the unseal key in base64.
+
 ## Handle DNS registration (TODO)
 
 ## Automate the deployment with Terraform (TODO)
