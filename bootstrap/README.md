@@ -42,7 +42,7 @@ Check the offical guides:
 - [https://learn.hashicorp.com/tutorials/vault/pki-engine#step-1-generate-root-ca](https://learn.hashicorp.com/tutorials/vault/pki-engine#step-1-generate-root-ca) -> This is the best guide to start dealing with TLS SSL certificates
 
 ### Fianl Notes
-During the unsealing procedure it's very important keep the vault-keys (root token and unseal keys row and base64 encoded). If you plan a vault restart you need to manually provide the unseal key in base64.
+During the first unsealing procedure there is a critical step to realize in order to start using Vault: the vault-keys generation. It's very important to keep this vault keys (root token and unseal keys row and base64 encoded) in order to use in case of "emergency". If you plan a vault restart you need to manually provide the unseal key in base64.
 
 ## Handle DNS registration (TODO)
 
