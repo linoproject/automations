@@ -41,6 +41,11 @@ Check the offical guides:
 - [https://www.vaultproject.io/docs/secrets/pki](https://www.vaultproject.io/docs/secrets/pki)
 - [https://learn.hashicorp.com/tutorials/vault/pki-engine#step-1-generate-root-ca](https://learn.hashicorp.com/tutorials/vault/pki-engine#step-1-generate-root-ca) -> This is the best guide to start dealing with TLS SSL certificates
 
+### Vault CLI
+To simplify the vault installation just install its CLI. Follow the official guide here: [https://learn.hashicorp.com/tutorials/vault/getting-started-install](https://learn.hashicorp.com/tutorials/vault/getting-started-install)
+
+Alternatively it's possible to interact using the "exec" commands in kubectl.
+
 ### Fianl Notes
 During the first unsealing procedure there is a critical step to realize in order to start using Vault: the vault-keys generation. It's very important to keep this vault keys (root token and unseal keys row and base64 encoded) in order to use in case of "emergency". If you plan a vault restart you need to manually provide the unseal key in base64.
 

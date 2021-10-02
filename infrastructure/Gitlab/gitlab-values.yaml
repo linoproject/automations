@@ -1,0 +1,11 @@
+certmanager-issuer:
+  email: info@linoproject.lab
+global:
+  hosts:
+    domain: domain.local
+    https: true
+  ingress:
+    tls:
+      enabled: true
+      secretName: gitlab-cert-1
+  external_url: "https://gitlab.domain.local"

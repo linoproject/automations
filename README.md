@@ -3,7 +3,7 @@
 ## Bootstrap
 - [Deploy bootstrap VM (with Vault and certificate)](bootstrap)
 - Deploy mgmt cluster via VMDemo:
-  - Deploy Gitlab (with custom cert)
+  - [Deploy Gitlab (with custom cert)](infrastructure/Gitlab)
   - Deploy Harbor (with custom cert)
   - Deploy Jenkins
     - Add CA Key cert on values
