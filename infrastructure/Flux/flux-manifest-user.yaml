@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-https-credentials
+  namespace: flux-system
+type: Opaque
+data:
+  username: <username_base64>
+  password: <password_base64>
+  caFile: <ca_file_base64>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: chart-museum-cert
+  namespace: flux-system
+type: Opaque
+data:
+  caFile: <ca_file_base64>
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: chartmuseum-prod
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: <chart_muesum_url>
+  secretRef: 
+    name: chart-museum-cert
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: gitlab-cluster1
+  namespace: flux-system
+spec:
+  #gitImplementation: go-git
+  interval: 1m
+  url: <gitlab_repo_url>
+  secretRef:
+    name: gitlab-https-credentials
+  ref:
+    branch: main
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: gitops-cluster1
+  namespace: flux-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: gitlab-cluster1
+    namespace: flux-system
+  prune: true
+  decryption:
+    provider: sops
