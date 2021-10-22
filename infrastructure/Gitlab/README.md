@@ -12,7 +12,7 @@ Create namespace and add a tls secret (keep in mind that the tls secret name mus
 `kubectl -n gitlab create secret tls gitlab-cert-1 --cert=cert.pem --key=cert.key`
 
 ## Installation
-`helm repo add hashicorp https://helm.releases.hashicorp.com`
+`helm repo add gitlab https://charts.gitlab.io/`
 
 Change the values of domain and external url according to your local domain in the file gitlab-values.yaml (and also the secret name). Then:
 `helm install -n gitlab gitlab gitlab/gitlab -f gitlab-values.yaml`
