@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: chartmuseum-ingress
+  namespace: chartmuseum
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
@@ -17,6 +18,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: chartmuseum-chartmuseum
+            name: chartmuseum
             port:
               number: 8080
