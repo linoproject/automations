@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chartmuseum-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - hosts:
+      - chartmuseum.tkglab.linoproject.lab
+    secretName: chartmuseum-tls
+  rules:
+  - host: chartmuseum.tkglab.linoproject.lab
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: chartmuseum-chartmuseum
+            port:
+              number: 8080
